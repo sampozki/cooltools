@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Codebench Tools</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.8/dist/flatly/bootstrap.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg-shape bg-shape-a"></div>
+    <div class="bg-shape bg-shape-b"></div>
+
+    <main class="container py-4 py-lg-5">
+      <header class="hero card mb-4 border-0 shadow-sm">
+        <div class="card-body p-4 p-md-5">
+          <p class="badge text-bg-warning mb-3">Static + Client-side</p>
+          <h1 class="display-6 mb-2">Codebench Tools</h1>
+          <p class="lead mb-0">Open a tool from the homepage or via URL slugs like <span class="font-mono">#/regex</span>.</p>
+        </div>
+      </header>
+
+      <section id="toolsLayout" class="row g-4 align-items-start tools-layout home-mode">
+        <aside class="col-12 col-lg-3 sidebar-col">
+          <div class="card tool-nav-card shadow-sm sticky-top nav-sticky">
+            <div class="card-header py-3">
+              <h2 class="h5 mb-0">Tools</h2>
+            </div>
+            <div class="card-body p-2">
+              <nav class="tool-nav" aria-label="Tool navigation">
+                <div class="tool-nav-group">
+                  <div class="tool-nav-title">General</div>
+                </div>
+                <div class="tool-nav-group">
+                  <div class="tool-nav-title">Text Processing</div>
+                  <a class="btn tool-link" href="#/regex">Regex Tester</a>
+                  <a class="btn tool-link" href="#/hidden">Show Hidden Chars</a>
+                  <a class="btn tool-link" href="#/newlines">Remove Newlines</a>
+                  <a class="btn tool-link" href="#/json">JSON Formatter</a>
+                </div>
+                <div class="tool-nav-group">
+                  <div class="tool-nav-title">Encoding & Numbers</div>
+                  <a class="btn tool-link" href="#/binary">Binary ↔ ASCII</a>
+                  <a class="btn tool-link" href="#/base64">Base64</a>
+                  <a class="btn tool-link" href="#/hex-ascii">Hex ↔ ASCII</a>
+                  <a class="btn tool-link" href="#/bin-hex">Number Converter</a>
+                  <a class="btn tool-link" href="#/rot">ROT / Caesar</a>
+                </div>
+                <div class="tool-nav-group">
+                  <div class="tool-nav-title">Network</div>
+                  <a class="btn tool-link" href="#/subnet">Subnet Calculator</a>
+                </div>
+                <div class="tool-nav-group">
+                  <div class="tool-nav-title">Units</div>
+                  <a class="btn tool-link" href="#/units">Data Size Converter</a>
+                </div>
+              </nav>
+            </div>
+          </div>
+        </aside>
+
+        <div class="col-12 col-lg-9 content-col">
+          <article id="homePanel" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3">
+              <h2 class="h4 mb-0">Choose a Tool</h2>
+            </div>
+            <div class="card-body">
+              <p class="text-muted mb-3">This is the default first screen. Pick one tool to open:</p>
+              <div class="home-sections">
+                <section class="home-category">
+                  <h3 class="home-category-title">Text Processing</h3>
+                  <div class="home-grid">
+                    <a class="home-tool" href="#/regex"><strong>Regex Tester</strong><span>Highlight regex matches in text.</span></a>
+                    <a class="home-tool" href="#/hidden"><strong>Show Hidden Chars</strong><span>Visualize spaces, tabs, and newlines.</span></a>
+                    <a class="home-tool" href="#/newlines"><strong>Remove Newlines</strong><span>Collapse consecutive blank lines.</span></a>
+                    <a class="home-tool" href="#/json"><strong>JSON Formatter</strong><span>Pretty-print or minify JSON.</span></a>
+                  </div>
+                </section>
+                <section class="home-category">
+                  <h3 class="home-category-title">Encoding & Numbers</h3>
+                  <div class="home-grid">
+                    <a class="home-tool" href="#/binary"><strong>Binary ↔ ASCII</strong><span>Convert between byte strings and text.</span></a>
+                    <a class="home-tool" href="#/base64"><strong>Base64</strong><span>Encode and decode UTF-8 text.</span></a>
+                    <a class="home-tool" href="#/hex-ascii"><strong>Hex ↔ ASCII</strong><span>Convert hex bytes and text.</span></a>
+                    <a class="home-tool" href="#/bin-hex"><strong>Number Converter</strong><span>Convert between bin, oct, dec, and hex.</span></a>
+                    <a class="home-tool" href="#/rot"><strong>ROT / Caesar</strong><span>Apply ROT13 or custom rotation.</span></a>
+                  </div>
+                </section>
+                <section class="home-category">
+                  <h3 class="home-category-title">Network & Units</h3>
+                  <div class="home-grid">
+                    <a class="home-tool" href="#/subnet"><strong>Subnet Calculator</strong><span>Calculate and split IPv4 subnets.</span></a>
+                    <a class="home-tool" href="#/units"><strong>Data Size Converter</strong><span>Convert MB, GB, MiB, and more.</span></a>
+                  </div>
+                </section>
+              </div>
+            </div>
+          </article>
+
+          <article id="regexTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Regex Tester</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="regexPattern" class="form-label">Pattern</label>
+              <input id="regexPattern" class="form-control font-mono" type="text" placeholder="e.g. \\b[a-z]+\\b" />
+
+              <div class="row mt-3">
+                <div class="col-12 col-md-6">
+                  <label for="regexFlags" class="form-label">Flags</label>
+                  <input id="regexFlags" class="form-control font-mono" type="text" placeholder="gim" value="g" />
+                </div>
+              </div>
+
+              <label for="regexText" class="form-label mt-3">Test Text</label>
+              <textarea id="regexText" class="form-control font-mono" rows="7" placeholder="Paste text here..."></textarea>
+
+              <div class="d-flex gap-2 mt-3">
+                <button id="runRegex" class="btn btn-primary" type="button">Highlight Matches</button>
+                <button id="clearRegex" class="btn btn-outline-secondary" type="button">Clear</button>
+              </div>
+
+              <div id="regexStatus" class="small text-muted mt-3"></div>
+              <div class="result-box mt-2">
+                <div class="small text-muted mb-1">Preview</div>
+                <div id="regexPreview" class="font-mono regex-preview"></div>
+              </div>
+            </div>
+          </article>
+
+          <article id="binaryTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Binary ↔ ASCII</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="asciiInput" class="form-label">ASCII Text</label>
+              <textarea id="asciiInput" class="form-control font-mono" rows="4" placeholder="Hello"></textarea>
+
+              <div class="d-grid gap-2 d-md-flex my-3">
+                <button id="asciiToBin" class="btn btn-success" type="button">ASCII → Binary</button>
+                <button id="binToAscii" class="btn btn-info" type="button">Binary → ASCII</button>
+              </div>
+
+              <label for="binaryInput" class="form-label">Binary</label>
+              <textarea id="binaryInput" class="form-control font-mono" rows="6" placeholder="01001000 01100101 01101100 01101100 01101111"></textarea>
+
+              <div id="binaryStatus" class="small text-muted mt-2"></div>
+            </div>
+          </article>
+
+          <article id="base64Tool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Base64 Encoder / Decoder</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="base64Input" class="form-label">Input</label>
+              <textarea id="base64Input" class="form-control font-mono" rows="4" placeholder="Type plain text or Base64 here"></textarea>
+
+              <div class="d-grid gap-2 d-md-flex my-3">
+                <button id="encodeB64" class="btn btn-warning" type="button">Encode</button>
+                <button id="decodeB64" class="btn btn-outline-warning" type="button">Decode</button>
+              </div>
+
+              <label for="base64Output" class="form-label">Output</label>
+              <textarea id="base64Output" class="form-control font-mono" rows="4" readonly></textarea>
+            </div>
+          </article>
+
+          <article id="hexAsciiTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Hex ↔ ASCII</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="hexAsciiText" class="form-label">ASCII Text</label>
+              <textarea id="hexAsciiText" class="form-control font-mono" rows="4" placeholder="Hello"></textarea>
+
+              <div class="d-grid gap-2 d-md-flex my-3">
+                <button id="asciiToHex" class="btn btn-success" type="button">ASCII → Hex</button>
+                <button id="hexToAscii" class="btn btn-info" type="button">Hex → ASCII</button>
+              </div>
+
+              <label for="hexAsciiHex" class="form-label">Hex Bytes</label>
+              <textarea id="hexAsciiHex" class="form-control font-mono" rows="4" placeholder="48 65 6C 6C 6F"></textarea>
+              <div id="hexAsciiStatus" class="small text-muted mt-2"></div>
+            </div>
+          </article>
+
+          <article id="binHexTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Number Converter (Bin/Oct/Dec/Hex)</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-8">
+                  <label for="numberInput" class="form-label">Input Number</label>
+                  <input id="numberInput" class="form-control font-mono" type="text" placeholder="10101111" />
+                </div>
+                <div class="col-12 col-md-4">
+                  <label for="numberBase" class="form-label">Input Base</label>
+                  <select id="numberBase" class="form-select font-mono">
+                    <option value="bin">Binary (2)</option>
+                    <option value="oct">Octal (8)</option>
+                    <option value="dec" selected>Decimal (10)</option>
+                    <option value="hex">Hex (16)</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="d-flex gap-2 my-3">
+                <button id="convertNumberBases" class="btn btn-primary" type="button">Convert</button>
+              </div>
+
+              <div class="row g-3">
+                <div class="col-12 col-md-6">
+                  <label for="numberOutBin" class="form-label">Binary</label>
+                  <input id="numberOutBin" class="form-control font-mono" type="text" readonly />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="numberOutOct" class="form-label">Octal</label>
+                  <input id="numberOutOct" class="form-control font-mono" type="text" readonly />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="numberOutDec" class="form-label">Decimal</label>
+                  <input id="numberOutDec" class="form-control font-mono" type="text" readonly />
+                </div>
+                <div class="col-12 col-md-6">
+                  <label for="numberOutHex" class="form-label">Hex</label>
+                  <input id="numberOutHex" class="form-control font-mono" type="text" readonly />
+                </div>
+              </div>
+
+              <div id="binHexStatus" class="small text-muted mt-2"></div>
+            </div>
+          </article>
+
+          <article id="hiddenTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Hidden Character Viewer</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="hiddenInput" class="form-label">Input</label>
+              <textarea id="hiddenInput" class="form-control font-mono" rows="6" placeholder="Paste text to visualize spaces/tabs/newlines"></textarea>
+
+              <div class="d-flex gap-2 mt-3">
+                <button id="showHidden" class="btn btn-primary" type="button">Show Hidden Characters</button>
+              </div>
+
+              <div id="hiddenStats" class="small text-muted mt-3"></div>
+              <div class="result-box mt-2">
+                <div class="small text-muted mb-1">Output</div>
+                <pre id="hiddenOutput" class="font-mono mb-0"></pre>
+              </div>
+            </div>
+          </article>
+
+          <article id="newlineTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Consecutive Newline Remover</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="newlineInput" class="form-label">Input</label>
+              <textarea id="newlineInput" class="form-control font-mono" rows="6" placeholder="Paste text with blank lines"></textarea>
+
+              <div class="d-flex gap-2 my-3">
+                <button id="collapseNewlines" class="btn btn-primary" type="button">Remove Consecutive Newlines</button>
+              </div>
+
+              <label for="newlineOutput" class="form-label">Output</label>
+              <textarea id="newlineOutput" class="form-control font-mono" rows="6" readonly></textarea>
+            </div>
+          </article>
+
+          <article id="jsonTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">JSON Formatter / Minifier</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="jsonInput" class="form-label">JSON Input</label>
+              <textarea id="jsonInput" class="form-control font-mono" rows="6" placeholder='{"name":"Ada","age":32}'></textarea>
+
+              <div class="d-flex gap-2 my-3">
+                <button id="formatJson" class="btn btn-success" type="button">Format</button>
+                <button id="minifyJson" class="btn btn-outline-success" type="button">Minify</button>
+              </div>
+
+              <div id="jsonStatus" class="small text-muted mb-2"></div>
+              <label for="jsonOutput" class="form-label">Output</label>
+              <textarea id="jsonOutput" class="form-control font-mono" rows="6" readonly></textarea>
+            </div>
+          </article>
+
+          <article id="subnetTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Subnet Calculator</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="subnetInput" class="form-label">IPv4 CIDR</label>
+              <input id="subnetInput" class="form-control font-mono" type="text" placeholder="e.g. 192.168.1.0/24" />
+              <div class="d-flex gap-2 mt-3">
+                <button id="calculateSubnet" class="btn btn-primary" type="button">Calculate</button>
+              </div>
+              <div id="subnetStatus" class="small text-muted mt-2"></div>
+              <div id="subnetTree" class="subnet-tree mt-3"></div>
+            </div>
+          </article>
+
+          <article id="unitTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Data Size Unit Converter</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <div class="row g-3">
+                <div class="col-12 col-md-4">
+                  <label for="unitValue" class="form-label">Value</label>
+                  <input id="unitValue" class="form-control font-mono" type="text" placeholder="10" />
+                </div>
+                <div class="col-12 col-md-4">
+                  <label for="unitFrom" class="form-label">From</label>
+                  <select id="unitFrom" class="form-select font-mono"></select>
+                </div>
+                <div class="col-12 col-md-4">
+                  <label for="unitTo" class="form-label">To</label>
+                  <select id="unitTo" class="form-select font-mono"></select>
+                </div>
+              </div>
+              <div class="d-flex gap-2 mt-3">
+                <button id="convertUnits" class="btn btn-primary" type="button">Convert</button>
+              </div>
+              <div id="unitStatus" class="small text-muted mt-2"></div>
+              <label for="unitResult" class="form-label mt-2">Result</label>
+              <input id="unitResult" class="form-control font-mono" type="text" readonly />
+            </div>
+          </article>
+
+          <article id="rotTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">ROT / Caesar Cipher</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <label for="rotInput" class="form-label">Input</label>
+              <textarea id="rotInput" class="form-control font-mono" rows="5" placeholder="Type text to rotate"></textarea>
+
+              <div class="row g-3 my-1">
+                <div class="col-12 col-md-4">
+                  <label for="rotAmount" class="form-label">Rotation</label>
+                  <select id="rotAmount" class="form-select font-mono"></select>
+                </div>
+                <div class="col-12 col-md-4">
+                  <label for="rotDirection" class="form-label">Direction</label>
+                  <select id="rotDirection" class="form-select">
+                    <option value="encode">Encode (+N)</option>
+                    <option value="decode">Decode (-N)</option>
+                  </select>
+                </div>
+                <div class="col-12 col-md-4 d-flex align-items-end">
+                  <button id="applyRot" class="btn btn-primary w-100" type="button">Apply Rotation</button>
+                </div>
+              </div>
+
+              <div id="rotStatus" class="small text-muted mt-2"></div>
+              <label for="rotOutput" class="form-label mt-2">Output</label>
+              <textarea id="rotOutput" class="form-control font-mono" rows="5" readonly></textarea>
+            </div>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>
