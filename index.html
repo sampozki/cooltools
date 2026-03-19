@@ -52,6 +52,7 @@
                   <a class="btn tool-link" href="#/hex-ascii">Hex ↔ ASCII</a>
                   <a class="btn tool-link" href="#/bin-hex">Number Converter</a>
                   <a class="btn tool-link" href="#/rot">ROT / Caesar</a>
+                  <a class="btn tool-link" href="#/codes">Barcode & QR</a>
                 </div>
                 <div class="tool-nav-group">
                   <div class="tool-nav-title">Network</div>
@@ -91,6 +92,7 @@
                     <a class="home-tool" href="#/hex-ascii"><strong>Hex ↔ ASCII</strong><span>Convert hex bytes and text.</span></a>
                     <a class="home-tool" href="#/bin-hex"><strong>Number Converter</strong><span>Convert between bin, oct, dec, and hex.</span></a>
                     <a class="home-tool" href="#/rot"><strong>ROT / Caesar</strong><span>Apply ROT13 or custom rotation.</span></a>
+                    <a class="home-tool" href="#/codes"><strong>Barcode & QR</strong><span>Generate QR codes and common barcode formats.</span></a>
                   </div>
                 </section>
                 <section class="home-category">
@@ -380,10 +382,119 @@
               <textarea id="rotOutput" class="form-control font-mono" rows="5" readonly></textarea>
             </div>
           </article>
+
+          <article id="codesTool" class="card tool-card shadow-sm tool-panel" data-tool-panel>
+            <div class="card-header py-3 d-flex justify-content-between align-items-center">
+              <h2 class="h4 mb-0">Barcode & QR Generators</h2>
+              <a class="btn btn-sm btn-outline-secondary" href="#/">Back</a>
+            </div>
+            <div class="card-body">
+              <div class="row g-4">
+                <div class="col-12 col-xl-6">
+                  <section class="code-section">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                      <div>
+                        <h3 class="h5 mb-1">QR Code</h3>
+                        <p class="text-muted mb-0">Generate a QR code from any text or URL.</p>
+                      </div>
+                      <span class="code-badge">Canvas</span>
+                    </div>
+
+                    <label for="qrInput" class="form-label">QR Content</label>
+                    <textarea id="qrInput" class="form-control font-mono" rows="5" placeholder="https://example.com"></textarea>
+
+                    <div class="row g-3 mt-1">
+                      <div class="col-12 col-md-6">
+                        <label for="qrSize" class="form-label">Size</label>
+                        <select id="qrSize" class="form-select font-mono">
+                          <option value="192">192 px</option>
+                          <option value="256" selected>256 px</option>
+                          <option value="320">320 px</option>
+                          <option value="384">384 px</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                      <button id="generateQr" class="btn btn-primary" type="button">Generate QR</button>
+                      <button id="downloadQr" class="btn btn-outline-primary" type="button">Download PNG</button>
+                    </div>
+
+                    <div id="qrStatus" class="small text-muted mt-3"></div>
+
+                    <div class="code-preview mt-3">
+                      <div class="small text-muted mb-2">Preview</div>
+                      <div class="qr-preview-wrap">
+                        <canvas id="qrCanvas" width="256" height="256"></canvas>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+
+                <div class="col-12 col-xl-6">
+                  <section class="code-section">
+                    <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                      <div>
+                        <h3 class="h5 mb-1">Barcode</h3>
+                        <p class="text-muted mb-0">Choose a common format and generate an SVG barcode.</p>
+                      </div>
+                      <span class="code-badge">SVG</span>
+                    </div>
+
+                    <div class="row g-3">
+                      <div class="col-12">
+                        <label for="barcodeInput" class="form-label">Barcode Value</label>
+                        <input id="barcodeInput" class="form-control font-mono" type="text" placeholder="5901234123457" />
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label for="barcodeType" class="form-label">Barcode Type</label>
+                        <select id="barcodeType" class="form-select font-mono">
+                          <option value="CODE128" selected>CODE128</option>
+                          <option value="CODE39">CODE39</option>
+                          <option value="EAN13">EAN-13</option>
+                          <option value="EAN8">EAN-8</option>
+                          <option value="UPC">UPC-A</option>
+                        </select>
+                      </div>
+                      <div class="col-12 col-md-6">
+                        <label for="barcodeHeight" class="form-label">Bar Height</label>
+                        <select id="barcodeHeight" class="form-select font-mono">
+                          <option value="70">70 px</option>
+                          <option value="90" selected>90 px</option>
+                          <option value="120">120 px</option>
+                          <option value="150">150 px</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div id="barcodeHint" class="small text-muted mt-2">
+                      CODE128 supports letters, numbers, and symbols.
+                    </div>
+
+                    <div class="d-flex flex-wrap gap-2 mt-3">
+                      <button id="generateBarcode" class="btn btn-primary" type="button">Generate Barcode</button>
+                      <button id="downloadBarcode" class="btn btn-outline-primary" type="button">Download SVG</button>
+                    </div>
+
+                    <div id="barcodeStatus" class="small text-muted mt-3"></div>
+
+                    <div class="code-preview mt-3">
+                      <div class="small text-muted mb-2">Preview</div>
+                      <div class="barcode-preview-wrap">
+                        <svg id="barcodeSvg"></svg>
+                      </div>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </article>
         </div>
       </section>
     </main>
 
+    <script src="vendor/qrious.min.js"></script>
+    <script src="vendor/JsBarcode.all.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

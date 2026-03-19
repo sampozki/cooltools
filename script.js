@@ -11,6 +11,7 @@ const ROUTES = {
   "/subnet": "subnetTool",
   "/units": "unitTool",
   "/rot": "rotTool",
+  "/codes": "codesTool",
 };
 
 const toolsLayout = document.getElementById("toolsLayout");
@@ -119,6 +120,22 @@ const rotDirection = document.getElementById("rotDirection");
 const applyRot = document.getElementById("applyRot");
 const rotOutput = document.getElementById("rotOutput");
 const rotStatus = document.getElementById("rotStatus");
+
+const qrInput = document.getElementById("qrInput");
+const qrSize = document.getElementById("qrSize");
+const generateQr = document.getElementById("generateQr");
+const downloadQr = document.getElementById("downloadQr");
+const qrStatus = document.getElementById("qrStatus");
+const qrCanvas = document.getElementById("qrCanvas");
+
+const barcodeInput = document.getElementById("barcodeInput");
+const barcodeType = document.getElementById("barcodeType");
+const barcodeHeight = document.getElementById("barcodeHeight");
+const barcodeHint = document.getElementById("barcodeHint");
+const generateBarcode = document.getElementById("generateBarcode");
+const downloadBarcode = document.getElementById("downloadBarcode");
+const barcodeStatus = document.getElementById("barcodeStatus");
+const barcodeSvg = document.getElementById("barcodeSvg");
 
 function escapeHtml(text) {
   return text
@@ -533,6 +550,16 @@ function setUnitStatus(message, isError = false) {
   unitStatus.className = `small mt-2 ${isError ? "text-danger" : "text-success"}`;
 }
 
+function setQrStatus(message, isError = false) {
+  qrStatus.textContent = message;
+  qrStatus.className = `small mt-3 ${isError ? "text-danger" : "text-success"}`;
+}
+
+function setBarcodeStatus(message, isError = false) {
+  barcodeStatus.textContent = message;
+  barcodeStatus.className = `small mt-3 ${isError ? "text-danger" : "text-success"}`;
+}
+
 function rotateText(text, amount) {
   return [...text]
     .map((char) => {
@@ -549,6 +576,143 @@ function rotateText(text, amount) {
       return char;
     })
     .join("");
+}
+
+const BARCODE_HINTS = {
+  CODE128: "CODE128 supports letters, numbers, and symbols.",
+  CODE39: "CODE39 supports A-Z, 0-9, space, and - . $ / + %.",
+  EAN13: "EAN-13 uses 12 or 13 digits.",
+  EAN8: "EAN-8 uses 7 or 8 digits.",
+  UPC: "UPC-A uses 11 or 12 digits.",
+};
+
+function updateBarcodeHint() {
+  barcodeHint.textContent = BARCODE_HINTS[barcodeType.value] || "";
+}
+
+function validateBarcodeValue(format, value) {
+  const trimmed = value.trim();
+  if (!trimmed) {
+    throw new Error("Enter a value for the barcode.");
+  }
+
+  if (format === "CODE128") {
+    return trimmed;
+  }
+
+  if (format === "CODE39") {
+    const normalized = trimmed.toUpperCase();
+    if (!/^[0-9A-Z\-.$/+% ]+$/.test(normalized)) {
+      throw new Error("CODE39 only allows A-Z, 0-9, space, and - . $ / + %.");
+    }
+    return normalized;
+  }
+
+  if (format === "EAN13") {
+    if (!/^\d{12,13}$/.test(trimmed)) {
+      throw new Error("EAN-13 must contain 12 or 13 digits.");
+    }
+    return trimmed;
+  }
+
+  if (format === "EAN8") {
+    if (!/^\d{7,8}$/.test(trimmed)) {
+      throw new Error("EAN-8 must contain 7 or 8 digits.");
+    }
+    return trimmed;
+  }
+
+  if (format === "UPC") {
+    if (!/^\d{11,12}$/.test(trimmed)) {
+      throw new Error("UPC-A must contain 11 or 12 digits.");
+    }
+    return trimmed;
+  }
+
+  throw new Error("Unsupported barcode type.");
+}
+
+const qrInstance = typeof QRious === "function"
+  ? new QRious({
+      element: qrCanvas,
+      value: "https://example.com",
+      size: 256,
+      level: "M",
+      padding: 16,
+      foreground: "#1f2329",
+      background: "#ffffff",
+    })
+  : null;
+
+function generateQrCode() {
+  const value = qrInput.value.trim();
+  const size = Number(qrSize.value);
+
+  if (!qrInstance) {
+    setQrStatus("QR library did not load from vendor/qrious.min.js.", true);
+    return;
+  }
+
+  if (!value) {
+    setQrStatus("Enter text or a URL for the QR code.", true);
+    return;
+  }
+
+  qrInstance.value = value;
+  qrInstance.size = size;
+  setQrStatus(`QR code generated at ${size}px.`);
+}
+
+function downloadCanvas(canvas, filename) {
+  const link = document.createElement("a");
+  link.href = canvas.toDataURL("image/png");
+  link.download = filename;
+  link.click();
+}
+
+function generateBarcodeSvg() {
+  const format = barcodeType.value;
+
+  try {
+    const value = validateBarcodeValue(format, barcodeInput.value);
+    if (typeof JsBarcode !== "function") {
+      throw new Error("Barcode library did not load from vendor/JsBarcode.all.min.js.");
+    }
+    JsBarcode(barcodeSvg, value, {
+      format,
+      lineColor: "#1f2329",
+      background: "#fffaf1",
+      width: format === "CODE128" ? 2 : 1.8,
+      height: Number(barcodeHeight.value),
+      displayValue: true,
+      font: "IBM Plex Mono",
+      fontOptions: "600",
+      fontSize: 15,
+      margin: 12,
+    });
+    setBarcodeStatus(`${format} barcode generated successfully.`);
+  } catch (error) {
+    barcodeSvg.replaceChildren();
+    barcodeSvg.removeAttribute("viewBox");
+    setBarcodeStatus(error.message, true);
+  }
+}
+
+function downloadBarcodeSvgFile() {
+  if (!barcodeSvg.childNodes.length) {
+    setBarcodeStatus("Generate a barcode before downloading it.", true);
+    return;
+  }
+
+  const serializer = new XMLSerializer();
+  const svgText = serializer.serializeToString(barcodeSvg);
+  const blob = new Blob([svgText], { type: "image/svg+xml;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = "barcode.svg";
+  link.click();
+  URL.revokeObjectURL(url);
 }
 
 for (let i = 1; i <= 25; i += 1) {
@@ -575,6 +739,7 @@ Object.keys(DATA_UNITS).forEach((unit) => {
 
 unitFrom.value = "MB";
 unitTo.value = "Mb";
+updateBarcodeHint();
 
 runRegex.addEventListener("click", runRegexHighlight);
 
@@ -725,3 +890,20 @@ applyRot.addEventListener("click", () => {
   rotStatus.textContent = `Applied ROT${rawAmount} (${direction}).`;
   rotStatus.className = "small text-success mt-2";
 });
+
+generateQr.addEventListener("click", generateQrCode);
+
+downloadQr.addEventListener("click", () => {
+  if (!qrInput.value.trim()) {
+    setQrStatus("Generate a QR code before downloading it.", true);
+    return;
+  }
+  generateQrCode();
+  if (qrInput.value.trim()) {
+    downloadCanvas(qrCanvas, "qr-code.png");
+  }
+});
+
+barcodeType.addEventListener("change", updateBarcodeHint);
+generateBarcode.addEventListener("click", generateBarcodeSvg);
+downloadBarcode.addEventListener("click", downloadBarcodeSvgFile);
